@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'package:flutter/material.dart';
 import '../constants/colors.dart';
 import '../models/todo.dart';
@@ -18,7 +20,7 @@ class TodoItem extends StatelessWidget {
         onTap: () {
           onTodoChange(todo);
         },
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         tileColor: Colors.white,
         leading: Icon(

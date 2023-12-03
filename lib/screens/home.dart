@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../models/todo.dart';
 import '../widgets/todo_item.dart';
 import '../constants/colors.dart';
 
 class Home extends StatefulWidget {
-  Home({super.key});
+  const Home({super.key});
 
   @override
   State<Home> createState() => _HomeState();
@@ -52,7 +51,8 @@ class _HomeState extends State<Home> {
                           todo: todo,
                           onTodoChange: _handleTodoChange,
                           onTodoDelete: _deleteTodoItem,
-                        )
+                        ),
+                      const SizedBox(height: 80,)
                     ],
                   ))
                 ],
@@ -94,6 +94,9 @@ class _HomeState extends State<Home> {
                       backgroundColor: tdBlue,
                       minimumSize: const Size(60, 60),
                       elevation: 10,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)
+                      ),
                     ),
                     onPressed: () {
                       _addToTodoList(_todoController.text);
@@ -160,7 +163,7 @@ class _HomeState extends State<Home> {
             color: tdBlack,
             size: 30,
           ),
-          Container(
+          SizedBox(
             height: 40,
             width: 40,
             child: ClipRRect(

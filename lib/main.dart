@@ -18,7 +18,7 @@ class Todo extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: Home(),
+      home: const Home(),
       debugShowCheckedModeBanner: false,
     );
   }
