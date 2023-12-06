@@ -29,7 +29,9 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
-/build/
+# /build/
+/build/app/
+/build/shared_preferences_android/
 
 # Symbolication related
 app.*.symbols
