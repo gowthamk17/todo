@@ -1,6 +1,6 @@
 class Todo {
-  String? id;
-  String? todoText;
+  String id;
+  String todoText;
   bool isDone;
 
   Todo({
@@ -11,7 +11,7 @@ class Todo {
 
   static List<Todo> todoList() {
     return [
-      Todo(id: '1', todoText: "Todo1"),
+      
     ];
   }
 

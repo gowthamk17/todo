@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/todo.dart';
 import '../widgets/todo_item.dart';
 import '../constants/colors.dart';
@@ -11,14 +12,15 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final todoList = Todo.todoList();
+  List<Todo> todoList = [];
   List<Todo> _filteredList = [];
   final _todoController = TextEditingController();
+  late SharedPreferences _preferences;
 
   @override
   void initState() {
-    _filteredList = todoList;
     super.initState();
+    _loadData();
   }
 
   @override
@@ -39,7 +41,7 @@ class _HomeState extends State<Home> {
                       Container(
                         margin: const EdgeInsets.only(top: 50, bottom: 20),
                         child: const Text(
-                          "All ToDo's",
+                          "ToDo's List",
                           style: TextStyle(
                             fontSize: 30,
                             fontWeight: FontWeight.w500,
@@ -99,7 +101,9 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                     onPressed: () {
-                      _addToTodoList(_todoController.text);
+                      if(_todoController.text.isNotEmpty) {
+                        _addToTodoList(_todoController.text);
+                      }
                     },
                     child: const Text(
                       "+",
@@ -118,20 +122,34 @@ class _HomeState extends State<Home> {
   void _handleTodoChange(Todo todo) {
     setState(() {
       todo.isDone = !todo.isDone;
+      List<String>? savedData = _preferences.getStringList(todo.id);
+      if (savedData != null) {
+        _preferences.setStringList(todo.id, [todo.todoText, todo.isDone ? 'true' : 'false']);
+      }
     });
   }
 
   void _deleteTodoItem(String id) {
     setState(() {
       todoList.removeWhere((item) => item.id == id);
+      List<String>? savedTodoList = _preferences.getStringList('todoId');
+      if (savedTodoList != null)  {
+        savedTodoList.remove(id);
+        _preferences.remove(id);
+      }
     });
   }
 
   void _addToTodoList(String todo) {
     setState(() {
-      todoList.add(Todo(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          todoText: todo));
+      String id = DateTime.now().millisecondsSinceEpoch.toString();
+      Todo newTodo = Todo(id: id,todoText: todo);
+      todoList.add(newTodo);
+      List<String>? savedTodoList = _preferences.getStringList('todoId');
+      if (savedTodoList != null) {
+        _preferences.setStringList('todoId', [...savedTodoList,id]);
+        _preferences.setStringList(id, [todo, 'false']);
+      }
     });
     _todoController.clear();
   }
@@ -143,11 +161,31 @@ class _HomeState extends State<Home> {
     } else {
       result = todoList
           .where((item) =>
-              item.todoText!.toLowerCase().contains(searchWord.toLowerCase()))
+              item.todoText.toLowerCase().contains(searchWord.toLowerCase()))
           .toList();
     }
     setState(() {
       _filteredList = result;
+    });
+  }
+
+  Future<void> _loadData() async {
+    _preferences = await SharedPreferences.getInstance();
+    List<String>? savedTodoIdList = _preferences.getStringList('todoId');
+    if (savedTodoIdList != null) {
+      for (String id in savedTodoIdList) {
+        List<String>? todoData = _preferences.getStringList(id);
+        if (todoData != null) {
+          String todoText = todoData[0];
+          String isDone = todoData[1];
+          todoList.add(Todo(id: id, todoText: todoText, isDone: isDone == 'true' ? true : false));
+        }
+      }
+    } else {
+      _preferences.setStringList('todoId', []);
+    }
+    setState(() {
+    _filteredList = todoList;
     });
   }
 
@@ -201,4 +239,5 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+
 }
