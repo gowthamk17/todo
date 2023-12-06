@@ -37,26 +37,28 @@ class _HomeState extends State<Home> {
                   searchBox(),
                   Expanded(
                       child: ListView(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(top: 50, bottom: 20),
-                        child: const Text(
-                          "ToDo's List",
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w500,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(top: 50, bottom: 20),
+                            child: const Text(
+                              "ToDo's List",
+                              style: TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                      for (Todo todo in _filteredList.reversed)
-                        TodoItem(
-                          todo: todo,
-                          onTodoChange: _handleTodoChange,
-                          onTodoDelete: _deleteTodoItem,
-                        ),
-                      const SizedBox(height: 80,)
-                    ],
-                  ))
+                          for (Todo todo in _filteredList.reversed)
+                            TodoItem(
+                              todo: todo,
+                              onTodoChange: _handleTodoChange,
+                              onTodoDelete: _deleteTodoItem,
+                            ),
+                          const SizedBox(
+                            height: 80,
+                          )
+                        ],
+                      ))
                 ],
               )),
           Align(
@@ -97,11 +99,10 @@ class _HomeState extends State<Home> {
                       minimumSize: const Size(60, 60),
                       elevation: 10,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)
-                      ),
+                          borderRadius: BorderRadius.circular(10)),
                     ),
                     onPressed: () {
-                      if(_todoController.text.isNotEmpty) {
+                      if (_todoController.text.isNotEmpty) {
                         _addToTodoList(_todoController.text);
                       }
                     },
@@ -124,7 +125,8 @@ class _HomeState extends State<Home> {
       todo.isDone = !todo.isDone;
       List<String>? savedData = _preferences.getStringList(todo.id);
       if (savedData != null) {
-        _preferences.setStringList(todo.id, [todo.todoText, todo.isDone ? 'true' : 'false']);
+        _preferences.setStringList(
+            todo.id, [todo.todoText, todo.isDone ? 'true' : 'false']);
       }
     });
   }
@@ -133,7 +135,7 @@ class _HomeState extends State<Home> {
     setState(() {
       todoList.removeWhere((item) => item.id == id);
       List<String>? savedTodoList = _preferences.getStringList('todoId');
-      if (savedTodoList != null)  {
+      if (savedTodoList != null) {
         savedTodoList.remove(id);
         _preferences.remove(id);
       }
@@ -143,11 +145,11 @@ class _HomeState extends State<Home> {
   void _addToTodoList(String todo) {
     setState(() {
       String id = DateTime.now().millisecondsSinceEpoch.toString();
-      Todo newTodo = Todo(id: id,todoText: todo);
+      Todo newTodo = Todo(id: id, todoText: todo);
       todoList.add(newTodo);
       List<String>? savedTodoList = _preferences.getStringList('todoId');
       if (savedTodoList != null) {
-        _preferences.setStringList('todoId', [...savedTodoList,id]);
+        _preferences.setStringList('todoId', [...savedTodoList, id]);
         _preferences.setStringList(id, [todo, 'false']);
       }
     });
@@ -178,14 +180,17 @@ class _HomeState extends State<Home> {
         if (todoData != null) {
           String todoText = todoData[0];
           String isDone = todoData[1];
-          todoList.add(Todo(id: id, todoText: todoText, isDone: isDone == 'true' ? true : false));
+          todoList.add(Todo(
+              id: id,
+              todoText: todoText,
+              isDone: isDone == 'true' ? true : false));
         }
       }
     } else {
       _preferences.setStringList('todoId', []);
     }
     setState(() {
-    _filteredList = todoList;
+      _filteredList = todoList;
     });
   }
 
@@ -239,5 +244,4 @@ class _HomeState extends State<Home> {
       ),
     );
   }
-
 }
