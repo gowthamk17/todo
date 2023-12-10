@@ -37,28 +37,28 @@ class _HomeState extends State<Home> {
                   searchBox(),
                   Expanded(
                       child: ListView(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(top: 50, bottom: 20),
-                            child: const Text(
-                              "ToDo's List",
-                              style: TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 50, bottom: 20),
+                        child: const Text(
+                          "ToDo's List",
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.w500,
                           ),
-                          for (Todo todo in _filteredList.reversed)
-                            TodoItem(
-                              todo: todo,
-                              onTodoChange: _handleTodoChange,
-                              onTodoDelete: _deleteTodoItem,
-                            ),
-                          const SizedBox(
-                            height: 80,
-                          )
-                        ],
-                      ))
+                        ),
+                      ),
+                      for (Todo todo in _filteredList.reversed)
+                        TodoItem(
+                          todo: todo,
+                          onTodoChange: _handleTodoChange,
+                          onTodoDelete: _deleteTodoItem,
+                        ),
+                      const SizedBox(
+                        height: 80,
+                      )
+                    ],
+                  ))
                 ],
               )),
           Align(
