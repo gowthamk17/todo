@@ -31,36 +31,59 @@ class _HomeState extends State<Home> {
       body: Stack(
         children: [
           Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-              child: Column(
-                children: [
-                  searchBox(),
-                  Expanded(
-                      child: ListView(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(top: 50, bottom: 20),
-                        child: const Text(
-                          "ToDo's List",
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w500,
-                          ),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+            child: Column(
+              children: [
+                searchBox(),
+                Expanded(
+                  child: ReorderableListView(
+                    onReorder: (int oldIndex, int newIndex) {
+                      setState(() {
+                        if (oldIndex < newIndex) {
+                          newIndex -= 1;
+                        }
+                        Todo item = _filteredList.removeAt(oldIndex);
+                        _filteredList.insert(newIndex, item);
+                      });
+                    },
+                    buildDefaultDragHandles: false,
+                    header: Container(
+                      margin: const EdgeInsets.only(top: 50, bottom: 20),
+                      child: const Text(
+                        "ToDo's List",
+                        style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
-                      for (Todo todo in _filteredList.reversed)
-                        TodoItem(
-                          todo: todo,
-                          onTodoChange: _handleTodoChange,
-                          onTodoDelete: _deleteTodoItem,
+                    ),
+                    footer: const SizedBox(
+                      height: 80,
+                    ),
+                    children: [
+                      for (int i = 0; i < _filteredList.length; i++)
+                        ReorderableDragStartListener(
+                          key: ValueKey(_filteredList.toList()[i].todoText),
+                          index: i,
+                          child: Container(
+                            margin: const EdgeInsets.only(bottom: 20),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              color: Colors.white,
+                            ),
+                            child: TodoItem(
+                              todo: _filteredList.toList()[i],
+                              onTodoChange: _handleTodoChange,
+                              onTodoDelete: _deleteTodoItem,
+                            ),
+                          ),
                         ),
-                      const SizedBox(
-                        height: 80,
-                      )
                     ],
-                  ))
-                ],
-              )),
+                  ),
+                ),
+              ],
+            ),
+          ),
           Align(
             alignment: Alignment.bottomCenter,
             child: Row(
@@ -146,7 +169,7 @@ class _HomeState extends State<Home> {
     setState(() {
       String id = DateTime.now().millisecondsSinceEpoch.toString();
       Todo newTodo = Todo(id: id, todoText: todo);
-      todoList.add(newTodo);
+      todoList.insert(0, newTodo);
       List<String>? savedTodoList = _preferences.getStringList('todoId');
       if (savedTodoList != null) {
         _preferences.setStringList('todoId', [...savedTodoList, id]);
@@ -228,19 +251,20 @@ class _HomeState extends State<Home> {
       child: TextField(
         onChanged: (value) => _filterTodoList(value),
         decoration: const InputDecoration(
-            contentPadding: EdgeInsets.all(0),
-            prefixIcon: Icon(
-              Icons.search,
-              color: tdBlack,
-              size: 20,
-            ),
-            prefixIconConstraints: BoxConstraints(
-              maxHeight: 20,
-              minWidth: 25,
-            ),
-            border: InputBorder.none,
-            hintText: "Search",
-            hintStyle: TextStyle(color: tdGrey)),
+          contentPadding: EdgeInsets.all(0),
+          prefixIcon: Icon(
+            Icons.search,
+            color: tdBlack,
+            size: 20,
+          ),
+          prefixIconConstraints: BoxConstraints(
+            maxHeight: 20,
+            minWidth: 25,
+          ),
+          border: InputBorder.none,
+          hintText: "Search",
+          hintStyle: TextStyle(color: tdGrey),
+        ),
       ),
     );
   }

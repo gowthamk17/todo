@@ -14,43 +14,38 @@ class TodoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      child: ListTile(
-        onTap: () {
-          onTodoChange(todo);
-        },
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        tileColor: Colors.white,
-        leading: Icon(
-          todo.isDone ? Icons.check_box : Icons.check_box_outline_blank,
-          color: tdBlue,
+    return ListTile(
+      onTap: () {
+        onTodoChange(todo);
+      },
+      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      leading: Icon(
+        todo.isDone ? Icons.check_box : Icons.check_box_outline_blank,
+        color: tdBlue,
+      ),
+      title: Text(
+        todo.todoText,
+        style: TextStyle(
+          fontSize: 16,
+          color: tdBlack,
+          decoration: todo.isDone ? TextDecoration.lineThrough : TextDecoration.none,
         ),
-        title: Text(
-          todo.todoText,
-          style: TextStyle(
-            fontSize: 16,
-            color: tdBlack,
-            decoration: todo.isDone ? TextDecoration.lineThrough : TextDecoration.none,
-          ),
+      ),
+      trailing: Container(
+        height: 35,
+        width: 35,
+        padding: const EdgeInsets.all(0),
+        decoration: BoxDecoration(
+          color: tdRed,
+          borderRadius: BorderRadius.circular(5),
         ),
-        trailing: Container(
-          height: 35,
-          width: 35,
-          padding: const EdgeInsets.all(0),
-          decoration: BoxDecoration(
-            color: tdRed,
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: IconButton(
-            color: Colors.white,
-            iconSize: 18,
-            icon: const Icon(Icons.delete,),
-            onPressed: () {
-              onTodoDelete(todo.id);
-            },
-          ),
+        child: IconButton(
+          color: Colors.white,
+          iconSize: 18,
+          icon: const Icon(Icons.delete,),
+          onPressed: () {
+            onTodoDelete(todo.id);
+          },
         ),
       ),
     );
