@@ -63,10 +63,9 @@ class _HomeState extends State<Home> {
                     ),
                     children: [
                       for (int i = 0; i < _filteredList.length; i++)
-                        ReorderableDragStartListener(
+                        ReorderableDelayedDragStartListener(
                           key: ValueKey(_filteredList.toList()[i].todoText),
                           index: i,
-
                           child: Container(
                             margin: const EdgeInsets.only(bottom: 20),
                             decoration: BoxDecoration(
