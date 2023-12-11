@@ -46,6 +46,7 @@ class _HomeState extends State<Home> {
                         _filteredList.insert(newIndex, item);
                       });
                     },
+                    proxyDecorator: (child, index, animation) => Material(type: MaterialType.transparency,child: child),
                     buildDefaultDragHandles: false,
                     header: Container(
                       margin: const EdgeInsets.only(top: 50, bottom: 20),
@@ -65,6 +66,7 @@ class _HomeState extends State<Home> {
                         ReorderableDragStartListener(
                           key: ValueKey(_filteredList.toList()[i].todoText),
                           index: i,
+
                           child: Container(
                             margin: const EdgeInsets.only(bottom: 20),
                             decoration: BoxDecoration(
